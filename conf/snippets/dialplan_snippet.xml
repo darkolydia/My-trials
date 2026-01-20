@@ -1,0 +1,20 @@
+<!-- 
+  Dialplan Snippet for Extension 1000
+  Copy this snippet into your existing conf/dialplan/default.xml
+  Place it within the <context name="default"> section
+-->
+    <!-- Extension 1000: Plays a greeting message -->
+    <extension name="extension_1000">
+      <condition field="destination_number" expression="^1000$">
+        <!-- Answer the call -->
+        <action application="answer"/>
+        <!-- Wait 1 second for call to stabilize -->
+        <action application="sleep" data="1000"/>
+        <!-- Play greeting message (if WAV file exists) -->
+        <action application="playback" data="ivr/ivr-hello.wav"/>
+        <!-- Say the greeting text using TTS (fallback if WAV doesn't exist) -->
+        <action application="speak" data="flite|kal|Hello, welcome to FreeSWITCH"/>
+        <!-- Hangup the call -->
+        <action application="hangup" data="NORMAL_CLEARING"/>
+      </condition>
+    </extension>

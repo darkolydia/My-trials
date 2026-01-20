@@ -1,0 +1,30 @@
+# FreeSWITCH Installation Files (don't commit actual FreeSWITCH installation)
+# These are copied to C:\Program Files\FreeSWITCH\conf\ during setup
+
+# Windows
+Thumbs.db
+Desktop.ini
+*.lnk
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+~$*
+
+# OS files
+.DS_Store
+
+# FreeSWITCH runtime files (if any are created locally)
+*.db
+*.pid

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  FreeSWITCH Dialplan Configuration
+  This file defines how calls are routed and handled
+-->
+<include>
+  <context name="default">
+    <!-- Extension 1000: Plays a greeting message -->
+    <extension name="extension_1000">
+      <condition field="destination_number" expression="^1000$">
+        <!-- Answer the call -->
+        <action application="answer"/>
+        <!-- Wait 1 second for call to stabilize -->
+        <action application="sleep" data="1000"/>
+        <!-- Play greeting message -->
+        <action application="playback" data="ivr/ivr-hello.wav"/>
+        <!-- Say the greeting text using TTS -->
+        <action application="speak" data="flite|kal|Hello, welcome to FreeSWITCH"/>
+        <!-- Hangup the call -->
+        <action application="hangup" data="NORMAL_CLEARING"/>
+      </condition>
+    </extension>
+
+    <!-- Extension 1001: Plays a simple greeting -->
+    <extension name="extension_1001">
+      <condition field="destination_number" expression="^1001$">
+        <!-- Answer the call -->
+        <action application="answer"/>
+        <!-- Wait 1 second for call to stabilize -->
+        <action application="sleep" data="1000"/>
+        <!-- Play a short tone so you know audio works -->
+        <action application="playback" data="tone_stream://%(1000,0,480);loops=2"/>
+        <!-- Say the greeting text using TTS -->
+        <action application="speak" data="flite|kal|Hello, welcome to FreeSWITCH"/>
+        <!-- Hangup the call -->
+        <action application="hangup" data="NORMAL_CLEARING"/>
+      </condition>
+    </extension>
+
+    <!-- SMS/MESSAGE Handler: Logs incoming text messages -->
+    <!-- FreeSWITCH handles MESSAGE requests via message context or this catch-all -->
+    <extension name="sms_handler">
+      <condition field="message_type" expression="^request$">
+        <!-- Log the message -->
+        <action application="log" data="INFO ========================================"/>
+        <action application="log" data="INFO SMS/MESSAGE RECEIVED!"/>
+        <action application="log" data="INFO From: ${sip_from_user}"/>
+        <action application="log" data="INFO To: ${sip_to_user}"/>
+        <action application="log" data="INFO Message Body: ${body}"/>
+        <action application="log" data="INFO ========================================"/>
+        <!-- Send 200 OK response -->
+        <action application="respond" data="200 OK"/>
+      </condition>
+    </extension>
+  </context>
+</include>
