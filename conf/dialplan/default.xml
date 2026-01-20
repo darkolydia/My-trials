@@ -21,18 +21,74 @@
       </condition>
     </extension>
 
-    <!-- Extension 1001: Plays a simple greeting -->
+    <!-- Extension 1001: Plays Twi greeting in local language -->
     <extension name="extension_1001">
       <condition field="destination_number" expression="^1001$">
+        <!-- Log FIRST - before anything else to verify dialplan is hit -->
+        <action application="log" data="CRITICAL ========================================"/>
+        <action application="log" data="CRITICAL EXTENSION 1001 DIALPLAN MATCHED!"/>
+        <action application="log" data="CRITICAL ========================================"/>
         <!-- Answer the call -->
         <action application="answer"/>
+        <action application="log" data="CRITICAL Call answered"/>
         <!-- Wait 1 second for call to stabilize -->
         <action application="sleep" data="1000"/>
-        <!-- Play a short tone so you know audio works -->
-        <action application="playback" data="tone_stream://%(1000,0,480);loops=2"/>
-        <!-- Say the greeting text using TTS -->
-        <action application="speak" data="flite|kal|Hello, welcome to FreeSWITCH"/>
+        <action application="log" data="CRITICAL After sleep, playing tone"/>
+        <!-- Play a short tone so you know audio works - make it longer -->
+        <action application="playback" data="tone_stream://%(1000,0,480);loops=5"/>
+        <action application="log" data="CRITICAL Tone finished"/>
+        <action application="sleep" data="500"/>
+        <action application="log" data="CRITICAL Now playing Twi greeting"/>
+        <!-- Play Twi greeting audio file (generated using Ghana NLP) -->
+        <!-- Use absolute path from sounds directory root -->
+        <action application="playback" data="C:/Program Files/FreeSWITCH/sounds/custom/twi_greeting.wav"/>
+        <action application="log" data="CRITICAL After playback command"/>
+        <action application="sleep" data="2000"/>
+        <action application="log" data="CRITICAL Twi greeting finished, hanging up"/>
         <!-- Hangup the call -->
+        <action application="hangup" data="NORMAL_CLEARING"/>
+      </condition>
+    </extension>
+
+    <!-- Extension 1002: Interactive Voice Assistant - Q&A System (TEST MODE) -->
+    <extension name="extension_1002">
+      <condition field="destination_number" expression="^1002$">
+        <!-- Answer the call -->
+        <action application="answer"/>
+        <action application="log" data="CRITICAL ========================================"/>
+        <action application="log" data="CRITICAL Extension 1002 - TEST MODE"/>
+        <action application="log" data="CRITICAL ========================================"/>
+        <!-- Wait for call to stabilize -->
+        <action application="sleep" data="1000"/>
+        <!-- Play greeting -->
+        <action application="log" data="CRITICAL Playing greeting..."/>
+        <action application="playback" data="C:/Program Files/FreeSWITCH/sounds/custom/twi_greeting.wav"/>
+        <action application="log" data="CRITICAL Greeting finished"/>
+        <action application="sleep" data="500"/>
+        <!-- Record user's question -->
+        <action application="log" data="CRITICAL Starting recording..."/>
+        <!-- Use simple path without spaces -->
+        <action application="set" data="record_file=C:/freeswitch_recordings/user_question.wav"/>
+        <action application="log" data="CRITICAL Recording file: ${record_file}"/>
+        <!-- Record with beep - format: record path silence_threshold max_duration flags -->
+        <action application="record" data="${record_file} 3 20 b"/>
+        <action application="log" data="CRITICAL Recording command executed"/>
+        <action application="sleep" data="2000"/>
+        <action application="log" data="CRITICAL Recording should be finished"/>
+        <!-- Play "please wait" message -->
+        <action application="log" data="CRITICAL Playing wait message..."/>
+        <action application="playback" data="C:/Program Files/FreeSWITCH/sounds/custom/twi_please_wait.wav"/>
+        <action application="log" data="CRITICAL Wait message finished"/>
+        <!-- Process the recorded audio and generate response -->
+        <action application="log" data="CRITICAL Starting voice processing..."/>
+        <action application="system" data="python &quot;C:\Users\User\Desktop\FreeSWITCH-to-linphone\voice_assistant.py&quot; &quot;C:\freeswitch_recordings\user_question.wav&quot; -o &quot;C:\Program Files\FreeSWITCH\sounds\custom\response.wav&quot;"/>
+        <action application="log" data="CRITICAL Processing completed"/>
+        <action application="sleep" data="2000"/>
+        <!-- Play the response -->
+        <action application="log" data="CRITICAL Playing response..."/>
+        <action application="playback" data="C:/Program Files/FreeSWITCH/sounds/custom/response.wav"/>
+        <action application="log" data="CRITICAL Response played"/>
+        <!-- Hangup -->
         <action application="hangup" data="NORMAL_CLEARING"/>
       </condition>
     </extension>

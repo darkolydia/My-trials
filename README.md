@@ -238,13 +238,43 @@ Add additional `<user>` entries in `conf/directory/default.xml` and correspondin
 1. Place your WAV file in `sounds/` directory
 2. Update dialplan: `<action application="playback" data="path/to/your/greeting.wav"/>`
 
-### Local Language Greeting
-To use a local language (e.g., Ghanaian languages):
+### Twi (Ghanaian Language) Greeting Integration
+
+This repository includes **Ghana NLP integration** for Twi greetings! Extension 1001 now plays a greeting in Twi instead of English.
+
+**Quick Setup:**
+
+1. **Get Ghana NLP API Key**: Sign up at https://translation.ghananlp.org/
+2. **Install Python dependencies**:
+   ```powershell
+   pip install -r requirements.txt
+   ```
+3. **Run the setup script**:
+   ```powershell
+   # Set your API key
+   $env:GHANA_NLP_API_KEY = "your_api_key_here"
+   
+   # Run setup
+   .\setup-twi-greeting.ps1
+   ```
+
+This will:
+- Generate a Twi greeting audio file using Ghana NLP TTS
+- Copy it to FreeSWITCH sounds directory
+- Update the dialplan to use the Twi greeting
+- Reload FreeSWITCH configuration
+
+**Manual Setup:** See [GHANA_NLP_SETUP.md](GHANA_NLP_SETUP.md) for detailed instructions.
+
+**Test:** Dial 1001 from your SIP client to hear: "Akwaaba. Yɛma wo akwaaba wɔ FreeSWITCH." (Welcome. We welcome you to FreeSWITCH.)
+
+### Other Local Languages
+To use other local languages:
 1. Record or generate a WAV file in the desired language
 2. Place it in FreeSWITCH sounds directory
 3. Update dialplan to use `playback` instead of `speak`:
    ```xml
-   <action application="playback" data="custom/gh_greeting.wav"/>
+   <action application="playback" data="custom/your_greeting.wav"/>
    ```
 
 ## Security Notes

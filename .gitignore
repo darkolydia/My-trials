@@ -28,3 +28,6 @@ logs/
 # FreeSWITCH runtime files (if any are created locally)
 *.db
 *.pid
+
+# Environment variables
+.env
