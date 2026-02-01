@@ -60,15 +60,19 @@
         <action application="log" data="CRITICAL ========================================"/>
         <!-- Wait for call to stabilize -->
         <action application="sleep" data="1000"/>
-        <!-- Play greeting -->
+        <!-- Short tone to verify audio path -->
+        <action application="playback" data="tone_stream://%(500,0,620);loops=1"/>
+        <action application="sleep" data="300"/>
+        <!-- Play greeting: built-in first (always works), then Twi custom if present -->
         <action application="log" data="CRITICAL Playing greeting..."/>
+        <action application="playback" data="ivr/ivr-hello.wav"/>
         <action application="playback" data="C:/Program Files/FreeSWITCH/sounds/custom/twi_greeting.wav"/>
         <action application="log" data="CRITICAL Greeting finished"/>
         <action application="sleep" data="500"/>
         <!-- Record user's question -->
         <action application="log" data="CRITICAL Starting recording..."/>
         <!-- Use simple path without spaces -->
-        <action application="set" data="record_file=C:/freeswitch_recordings/user_question.wav"/>
+        <action application="set" data="record_file=C:/Users/User/Desktop/Recordings/user_question.wav"/>
         <action application="log" data="CRITICAL Recording file: ${record_file}"/>
         <!-- Record with beep - format: record path silence_threshold max_duration flags -->
         <action application="record" data="${record_file} 3 20 b"/>
@@ -79,14 +83,64 @@
         <action application="log" data="CRITICAL Playing wait message..."/>
         <action application="playback" data="C:/Program Files/FreeSWITCH/sounds/custom/twi_please_wait.wav"/>
         <action application="log" data="CRITICAL Wait message finished"/>
+        <!-- Clear response.wav before Python (avoid stale audio if script fails) -->
+        <action application="system" data="cmd /c copy /Y &quot;C:\Program Files\FreeSWITCH\sounds\custom\twi_please_wait.wav&quot; &quot;C:\Program Files\FreeSWITCH\sounds\custom\response.wav&quot;"/>
         <!-- Process the recorded audio and generate response -->
         <action application="log" data="CRITICAL Starting voice processing..."/>
-        <action application="system" data="python &quot;C:\Users\User\Desktop\FreeSWITCH-to-linphone\voice_assistant.py&quot; &quot;C:\freeswitch_recordings\user_question.wav&quot; -o &quot;C:\Program Files\FreeSWITCH\sounds\custom\response.wav&quot;"/>
+        <action application="system" data="python &quot;C:\Users\User\Desktop\FreeSWITCH-to-linphone\voice_assistant.py&quot; &quot;C:\Users\User\Desktop\Recordings\user_question.wav&quot; -o &quot;C:\Program Files\FreeSWITCH\sounds\custom\response.wav&quot;"/>
         <action application="log" data="CRITICAL Processing completed"/>
         <action application="sleep" data="2000"/>
         <!-- Play the response -->
         <action application="log" data="CRITICAL Playing response..."/>
         <action application="playback" data="C:/Program Files/FreeSWITCH/sounds/custom/response.wav"/>
+        <action application="log" data="CRITICAL Response played"/>
+        <!-- Hangup -->
+        <action application="hangup" data="NORMAL_CLEARING"/>
+      </condition>
+    </extension>
+
+    <!-- Extension 1003: English Voice Assistant - Interactive Q&A System -->
+    <extension name="extension_1003">
+      <condition field="destination_number" expression="^1003$">
+        <!-- Answer the call -->
+        <action application="answer"/>
+        <action application="log" data="CRITICAL ========================================"/>
+        <action application="log" data="CRITICAL Extension 1003 - English Voice Assistant"/>
+        <action application="log" data="CRITICAL ========================================"/>
+        <!-- Wait for call to stabilize -->
+        <action application="sleep" data="1000"/>
+        <!-- Short tone to verify audio path -->
+        <action application="playback" data="tone_stream://%(500,0,620);loops=1"/>
+        <action application="sleep" data="300"/>
+        <!-- Play English greeting -->
+        <action application="log" data="CRITICAL Playing English greeting..."/>
+        <action application="playback" data="ivr/ivr-hello.wav"/>
+        <action application="speak" data="flite|kal|Hello! I am your English voice assistant. Please ask me a question."/>
+        <action application="log" data="CRITICAL Greeting finished"/>
+        <action application="sleep" data="500"/>
+        <!-- Record user's question -->
+        <action application="log" data="CRITICAL Starting recording..."/>
+        <action application="set" data="record_file=C:/Users/User/Desktop/Recordings/user_question_english.wav"/>
+        <action application="log" data="CRITICAL Recording file: ${record_file}"/>
+        <!-- Record with beep - format: record path silence_threshold max_duration flags -->
+        <action application="record" data="${record_file} 3 20 b"/>
+        <action application="log" data="CRITICAL Recording command executed"/>
+        <action application="sleep" data="2000"/>
+        <action application="log" data="CRITICAL Recording should be finished"/>
+        <!-- Play "please wait" message -->
+        <action application="log" data="CRITICAL Playing wait message..."/>
+        <action application="speak" data="flite|kal|Please wait while I process your question."/>
+        <action application="log" data="CRITICAL Wait message finished"/>
+        <!-- Clear response.wav before Python (avoid stale audio if script fails) -->
+        <action application="system" data="cmd /c copy /Y &quot;C:\Program Files\FreeSWITCH\sounds\ivr\ivr-hello.wav&quot; &quot;C:\Program Files\FreeSWITCH\sounds\custom\response_english.wav&quot;"/>
+        <!-- Process the recorded audio and generate response -->
+        <action application="log" data="CRITICAL Starting English voice processing..."/>
+        <action application="system" data="python &quot;C:\Users\User\Desktop\FreeSWITCH-to-linphone\english_voice_assistant\voice_assistant.py&quot; &quot;C:\Users\User\Desktop\Recordings\user_question_english.wav&quot; -o &quot;C:\Program Files\FreeSWITCH\sounds\custom\response_english.wav&quot;"/>
+        <action application="log" data="CRITICAL Processing completed"/>
+        <action application="sleep" data="2000"/>
+        <!-- Play the response -->
+        <action application="log" data="CRITICAL Playing response..."/>
+        <action application="playback" data="C:/Program Files/FreeSWITCH/sounds/custom/response_english.wav"/>
         <action application="log" data="CRITICAL Response played"/>
         <!-- Hangup -->
         <action application="hangup" data="NORMAL_CLEARING"/>

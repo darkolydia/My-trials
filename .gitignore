@@ -31,3 +31,15 @@ logs/
 
 # Environment variables
 .env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+
+# Binary / generated audio (optional - remove *.wav to track audio files)
+# *.wav

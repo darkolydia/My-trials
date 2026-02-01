@@ -2,6 +2,24 @@
 
 A call-based voice AI assistant that lets smartphone users interact with an intelligent system through phone calls. The system converts speech in a local language to text, understands user intent using an AI model, and responds with synthesized speech via a scalable FastAPI backend.
 
+## Project Structure
+
+This repository contains **two separate voice assistant implementations**:
+
+### 📁 `twi_voice_assistant/` - Original Twi Version
+- **Language**: Twi (Ghanaian language) with English translation
+- **Q&A Storage**: Database (SQLite/PostgreSQL)
+- **Features**: Full database logging, translation, Twi STT/TTS
+- **Use Case**: Production system with persistent Q&A storage
+
+### 📁 `english_voice_assistant/` - English Version
+- **Language**: English only
+- **Q&A Storage**: Hardcoded dictionary (no database)
+- **Features**: Simple Q&A matching, English STT/TTS
+- **Use Case**: Simple English-only system without database dependencies
+
+Both versions use the same FreeSWITCH configuration and Ghana NLP API.
+
 ## FreeSWITCH Telephony System Configuration
 
 This repository includes FreeSWITCH configuration files for setting up a SIP-based telephony system that can be used as the foundation for the voice assistant.

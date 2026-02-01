@@ -1,0 +1,13 @@
+# Python dependencies for Ghana NLP integration (for STT)
+ghana-nlp>=0.1.5
+
+# Text-to-Speech for English (Ghana NLP doesn't support English TTS)
+gtts>=2.5.0
+
+# Audio processing
+pydub>=0.25.1
+soundfile>=0.12.0
+numpy>=1.24.0
+
+# Optional: for .env file support
+python-dotenv>=0.19.0

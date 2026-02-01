@@ -1,0 +1,41 @@
+Say this in Twi when you call (DB stays English-only)
+============================================================
+
+  Say (Twi):  Dɛn na woyɛ?
+  English:    What do you do?
+
+  Say (Twi):  deɛ woyɛ
+  English:    what you do
+
+  Say (Twi):  ɛdeɛn na woyɛ
+  English:    what does you do
+
+  Say (Twi):  ɛdeɛn na ɛyɛ kɔntɛkorɔ yɛ
+  English:    what does cultiflow do
+
+  Say (Twi):  Dɛn ne Cultiflow?
+  English:    What is Cultiflow?
+
+  Say (Twi):  Nnwuma bɛn na wode ma?
+  English:    What services do you offer?
+
+  Say (Twi):  Ɛhe na wowɔ?
+  English:    Where are you located?
+
+  Say (Twi):  Adwumakuw no din de dɛn?
+  English:    What is the company name?
+
+  Say (Twi):  Mɛyɛ dɛn atumi adu wo nkyɛn?
+  English:    How can I reach you?
+
+  Say (Twi):  Henanom na wodi Cultiflow so?
+  English:    Who runs Cultiflow?
+
+  Say (Twi):  Ɛhe na Cultiflow wɔ
+  English:    Where is Cultiflow?
+
+  Say (Twi):  Mɛyɛ dɛn ne wo adi nkitaho
+  English:    How can I contact you?
+
+  Say (Twi):  ɛdeɛn na yɛyɛ
+  English:    what do we do

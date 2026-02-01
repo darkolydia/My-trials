@@ -121,18 +121,32 @@ def generate_twi_greeting(api_key=None, output_dir="sounds/custom"):
                     audio.export(str(output_file), format="wav", parameters=["-acodec", "pcm_s16le"])
                     temp_file.unlink()
                     print(f"  ✓ Converted audio using pydub")
-                except Exception as e:
-                    # If conversion fails, try simple rename and warn
+                except Exception as e1:
+                    # Try soundfile + numpy resample
                     try:
-                        temp_file.rename(output_file)
-                        print(f"  ⚠ Warning: Audio conversion failed ({e}). Using original format.")
-                        print(f"  FreeSWITCH may not play this format. Install ffmpeg for conversion.")
-                    except:
-                        # If rename fails, copy it
-                        import shutil
-                        shutil.copy2(temp_file, output_file)
+                        import soundfile as sf
+                        import numpy as np
+                        data, sr = sf.read(str(temp_file), dtype="float64", always_2d=False)
+                        if data.ndim > 1:
+                            data = data.mean(axis=1)
+                        target_sr = 16000
+                        n = int(len(data) * target_sr / sr)
+                        x_old = np.arange(len(data))
+                        x_new = np.linspace(0, len(data) - 1, n)
+                        data = np.interp(x_new, x_old, data).astype(np.float32)
+                        sf.write(str(output_file), data, target_sr, subtype="PCM_16")
                         temp_file.unlink()
-                        print(f"  ⚠ Warning: Using original audio format - may need manual conversion")
+                        print(f"  ✓ Converted audio using soundfile + numpy")
+                    except Exception as e2:
+                        try:
+                            temp_file.rename(output_file)
+                            print(f"  ⚠ Warning: Audio conversion failed ({e2}). Using original format.")
+                            print(f"  FreeSWITCH may not play this format. Install ffmpeg for conversion.")
+                        except Exception:
+                            import shutil
+                            shutil.copy2(temp_file, output_file)
+                            temp_file.unlink()
+                            print(f"  ⚠ Warning: Using original audio format - may need manual conversion")
         except Exception as e:
             # Fallback: use file as-is
             temp_file.rename(output_file)

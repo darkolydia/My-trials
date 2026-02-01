@@ -1,0 +1,6 @@
+# Python dependencies for Ghana NLP integration
+ghana-nlp>=0.1.5
+pydub>=0.25.1
+
+# Database: PostgreSQL support for Q&A store (optional; SQLite still used)
+psycopg2-binary>=2.9.0
